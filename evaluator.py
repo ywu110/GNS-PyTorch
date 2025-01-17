@@ -10,6 +10,7 @@ from matplotlib import pyplot as plt
 import mpl_toolkits.mplot3d.axes3d as p3
 from matplotlib import animation
 import utils
+import pickle
 
 class PredEvaluator(object):
     def __init__(self, device, data_loader, model, output_dir, checkpoint=None):
@@ -48,6 +49,16 @@ class PredEvaluator(object):
                 }
                 print('loss: ', self.loss(outputs, labels, nonk_mask))
                 bounds = self.metadata['bounds'].cpu().numpy()
+                
+                saved_pred_pos_seq = outputs['pred_poss'].cpu().numpy().transpose(1, 0, 2)
+                saved_tgt_pos_seq = tgt_pos_seq.cpu().numpy().transpose(1, 0, 2)
+                saved_nonk_mask = nonk_mask.cpu().numpy()
+                saved_data = {
+                    'pred_poss': saved_pred_pos_seq,
+                    'tgt_poss': saved_tgt_pos_seq,
+                    'nonk_mask': saved_nonk_mask
+                }
+                pickle.dump(saved_data, open(os.path.join(self.output_dir, str(batch_idx)+'.pkl'), 'wb'))
 
                 tgt_pos_seq = tgt_pos_seq.cpu().numpy()[:, ::2]
                 pred_pos_seq = outputs['pred_poss'].cpu().numpy()[:, ::2]
@@ -61,7 +72,7 @@ class PredEvaluator(object):
                 points1 = tgt_pos_seq[:, 0]
                 ax1 = fig.add_subplot(121)
 
-                ax1.set_xlim(-20, 20); ax1.set_ylim(-20, 20);
+                ax1.set_xlim(bounds[0][0], bounds[0][1]); ax1.set_ylim(bounds[1][0], bounds[1][1]);
                 ax1.set_title('Ground truth')
                 ax1.get_xaxis().set_visible(False)
                 ax1.get_yaxis().set_visible(False)
@@ -69,7 +80,7 @@ class PredEvaluator(object):
 
                 points2 = pred_pos_seq[:, 0]
                 ax2 = fig.add_subplot(122)
-                ax2.set_xlim(-20, 20); ax2.set_ylim(-20, 20);
+                ax2.set_xlim(bounds[0][0], bounds[0][1]); ax2.set_ylim(bounds[1][0], bounds[1][1]);
                 ax2.set_title('Prediction')
                 ax2.get_xaxis().set_visible(False)
                 ax2.get_yaxis().set_visible(False)

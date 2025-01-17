@@ -79,5 +79,3 @@ convert_to_pickle('dataset_train_full.pt', is_train=True)
 convert_to_pickle('dataset_test.pt', is_train=False)
 
 
-
-
