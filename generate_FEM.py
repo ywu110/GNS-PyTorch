@@ -27,10 +27,12 @@ def convert_to_pickle(file_path, is_train=True):
         rollout_pos = pos_data[i].numpy()
         rollout_mass = particle_mass_data[i].numpy()
 
-        # for rollout_mass, if the mass is 0, set it to be 3
-        #                   if the mass is not 0, set it to be 5
         rollout_mass[rollout_mass == 0] = 3
-        rollout_mass[rollout_mass != 0] = 5
+        rollout_mass[rollout_mass == 0.1] = 5
+        
+        # length_3 = len(rollout_mass[rollout_mass == 3])
+        # length_5 = len(rollout_mass[rollout_mass == 5])
+        # print(f"length_3: {length_3}, length_5: {length_5}")
         
         # convert it into int type
         rollout_mass = np.array(rollout_mass, dtype=int)
@@ -42,7 +44,7 @@ def convert_to_pickle(file_path, is_train=True):
             if i < 100:
                 pickle.dump(dict, open(f'train/{i}.pkl', 'wb'))
             else:
-                pickle.dump(dict, open(f'val/{i-100}.pkl', 'wb'))
+                pickle.dump(dict, open(f'valid/{i-100}.pkl', 'wb'))
         else:
             pickle.dump(dict, open(f'test/{i}.pkl', 'wb'))
         
@@ -75,5 +77,7 @@ def convert_to_pickle(file_path, is_train=True):
 convert_to_pickle('dataset_train_full.pt', is_train=True)
 # generate test data
 convert_to_pickle('dataset_test.pt', is_train=False)
+
+
 
 

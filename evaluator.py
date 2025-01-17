@@ -55,13 +55,13 @@ class PredEvaluator(object):
 
                 # plot gifs and save
                 color = np.zeros([particle_type.shape[0], 3])
-                color[nonk_mask.cpu().numpy().astype(np.bool)] = [0.122, 0.467, 0.706]
+                color[nonk_mask.cpu().numpy().astype(np.bool_)] = [0.122, 0.467, 0.706]
                 fig = plt.figure(figsize=(12, 6))
 
                 points1 = tgt_pos_seq[:, 0]
                 ax1 = fig.add_subplot(121)
 
-                ax1.set_xlim(bounds[0][0], bounds[0][1]); ax1.set_ylim(bounds[1][0], bounds[1][1]);
+                ax1.set_xlim(-20, 20); ax1.set_ylim(-20, 20);
                 ax1.set_title('Ground truth')
                 ax1.get_xaxis().set_visible(False)
                 ax1.get_yaxis().set_visible(False)
@@ -69,7 +69,7 @@ class PredEvaluator(object):
 
                 points2 = pred_pos_seq[:, 0]
                 ax2 = fig.add_subplot(122)
-                ax2.set_xlim(bounds[0][0], bounds[0][1]); ax2.set_ylim(bounds[1][0], bounds[1][1]);
+                ax2.set_xlim(-20, 20); ax2.set_ylim(-20, 20);
                 ax2.set_title('Prediction')
                 ax2.get_xaxis().set_visible(False)
                 ax2.get_yaxis().set_visible(False)
