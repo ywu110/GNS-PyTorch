@@ -2,6 +2,7 @@ data/
 logs/
 eval_vis/
 ckpts/
+*.usd
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
