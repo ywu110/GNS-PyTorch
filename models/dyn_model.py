@@ -63,7 +63,7 @@ class Net(nn.Module):
         type_emb = self.particle_emb(particle_type)
 
         node_attr = torch.cat([vels,
-                               dist_to_walls,
+                               # dist_to_walls, # NOTE: in our case, we don't handle collision with wall. So, we can remove it. 
                                type_emb], axis=1)
 
         return node_attr

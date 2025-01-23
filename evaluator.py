@@ -58,6 +58,10 @@ class PredEvaluator(object):
                     'tgt_poss': saved_tgt_pos_seq,
                     'nonk_mask': saved_nonk_mask
                 }
+                
+                if not os.path.exists(self.output_dir):
+                    os.makedirs(self.output_dir, exist_ok=True)
+                
                 pickle.dump(saved_data, open(os.path.join(self.output_dir, str(batch_idx)+'.pkl'), 'wb'))
 
                 tgt_pos_seq = tgt_pos_seq.cpu().numpy()[:, ::2]
