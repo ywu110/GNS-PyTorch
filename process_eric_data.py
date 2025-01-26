@@ -112,7 +112,7 @@ def convert_to_pickle(file_path, output_path, is_train=True):
 
 if __name__ == "__main__":
     
-    num_rollouts = "short"
+    num_rollouts = "large_ke_kd"
     
     if num_rollouts == "short":
         # config_eric_2025-01-23_01+t=2025-01-23-00-51-39 has about 32 rollouts in training
@@ -122,6 +122,9 @@ if __name__ == "__main__":
         # config_eric_2025-01-21_01+t=2025-01-21-23-52-42/ has about 500 rollouts in training
         data_path = "/arc/project/st-pai-1/se3/outputs/generate_fem_cloth_data/config_eric_2025-01-21_01+t=2025-01-21-23-52-42/"
         output_path = 'data/FEM_Eric'
+    elif num_rollouts == "large_ke_kd":
+        data_path = "/arc/project/st-pai-1/se3/outputs/generate_fem_cloth_data/config_eric_2025-01-24_01+t=2025-01-24-19-22-12/"
+        output_path = 'data/FEM_large_ke_kd'
     
     train_data = os.path.join(data_path, 'dataset_train_full.pt')
     test_data = os.path.join(data_path, 'dataset_test.pt')

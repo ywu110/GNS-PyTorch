@@ -37,20 +37,20 @@ def render_usd_per_frame(
                 f"particle_{particle_idx:03d}_gt",
                 xpos_gt[particle_idx],
                 (0.0, 0.0, 0.0, 1.0),
-                0.2, # self.ball_radius
+                0.1, # self.ball_radius
                 color=(0.2, 0.4, 0.6))
             renderer.render_sphere(
                 f"particle_{particle_idx:03d}_pred",
                 xpos_pred[particle_idx],
                 (0.0, 0.0, 0.0, 1.0),
-                0.2, # self.ball_radius
+                0.1, # self.ball_radius
                 color=(0.6, 0.2, 0.2))
         else:
             renderer.render_sphere(
                 f"particle_{particle_idx:03d}_fixed",
                 xpos_gt[particle_idx],
-                (0.0, 0.0, 0.0, 1.0),
-                0.2, # self.ball_radius
+                (0.65, 0.65, 0.25, 1.0),
+                0.1, # self.ball_radius
                 color=(0.0, 0.0, 0.0))
     
     renderer.end_frame()
@@ -76,16 +76,23 @@ def main():
     predicted_positions = pickle_data['pred_poss']
     target_positions = pickle_data['tgt_poss']
     nonk_mask = pickle_data['nonk_mask']
+    
+    # according to eric said, we need to subsample it to 200
+    predicted_positions = predicted_positions[::4, :, :]
+    target_positions = target_positions[::4, :, :]
+    
+    print(predicted_positions.shape)
+    print(target_positions.shape)
 
     # Set up the WARP renderer
     stage_name = f"{pickle_idx}.usd"
     stage = os.path.join(dir_path, stage_name)
-    renderer = render.UsdRenderer(stage=stage)
+    renderer = render.UsdRenderer(stage=stage, fps=25)
 
     # render
     num_frames = predicted_positions.shape[0]
 
-    sim_dt = 0.001
+    sim_dt = 0.04
 
     for frame_idx in range(num_frames):
         target_positions_frame = target_positions[frame_idx]

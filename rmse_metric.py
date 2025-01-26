@@ -129,6 +129,13 @@ def main():
     print(f"The shape of data_gt is {data_gt.shape}")
     print(f"The shape of data_pred is {data_pred.shape}")
     
+    # According to what Eric said, we need to subsample it to 200
+    data_gt = data_gt[:, ::4, :, :]
+    data_pred = data_pred[:, ::4, :, :]
+    
+    print(f"After subsampling, the sahpe of data_gt is {data_gt.shape}")
+    print(f"After subsampling, the sahpe of data_pred is {data_pred.shape}")
+    
     # compute the mse for the data
     metric_dict = mse_signal(data_pred, data_gt, "rmse")
     
