@@ -38,20 +38,20 @@ def render_usd_per_frame(
                 xpos_gt[particle_idx],
                 (0.0, 0.0, 0.0, 1.0),
                 0.1, # self.ball_radius
-                color=(0.2, 0.4, 0.6))
+                color=(0.81, 0.35, 0.32))
             renderer.render_sphere(
                 f"particle_{particle_idx:03d}_pred",
                 xpos_pred[particle_idx],
                 (0.0, 0.0, 0.0, 1.0),
                 0.1, # self.ball_radius
-                color=(0.6, 0.2, 0.2))
+                color=(0.48, 0.75, 0.91))
         else:
             renderer.render_sphere(
                 f"particle_{particle_idx:03d}_fixed",
                 xpos_gt[particle_idx],
-                (0.65, 0.65, 0.25, 1.0),
+                (0.0, 0.0, 0.0, 1.0),
                 0.1, # self.ball_radius
-                color=(0.0, 0.0, 0.0))
+                color=(0.93, 0.83, 0.5))
     
     renderer.end_frame()
     return

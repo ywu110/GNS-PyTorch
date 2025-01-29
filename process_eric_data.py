@@ -6,7 +6,7 @@ from tqdm import tqdm
 import datetime
 
 
-def convert_to_pickle(file_path, output_path, is_train=True):
+def convert_to_pickle(file_path, output_path, is_train=True, num_rollouts="short_ke_kd"):
     dataset = torch.load(file_path)
     data_dict = dataset.sim_data
 
@@ -51,9 +51,14 @@ def convert_to_pickle(file_path, output_path, is_train=True):
             # According to Eric: training data has been processed.
             rollout_pos = pos_data[i].numpy()
         else:
-            # According to Eric: test data has not been processed. This is why we need subsampling
-            # convert the position to numpy array and select every 10th frame
-            rollout_pos = pos_data[i].numpy()[::10]
+            if num_rollouts == "short_ke_kd":
+                # For this dataset, Eric has processed the data. The test has already been of length 800
+                rollout_pos = pos_data[i].numpy()
+                print(f"We keep the data the same for {num_rollouts} dataset")
+            else:
+                # According to Eric: test data has not been processed. This is why we need subsampling
+                # convert the position to numpy array and select every 10th frame
+                rollout_pos = pos_data[i].numpy()[::10]
         
         rollout_mass = particle_mass_data[i].numpy()
 
@@ -112,7 +117,7 @@ def convert_to_pickle(file_path, output_path, is_train=True):
 
 if __name__ == "__main__":
     
-    num_rollouts = "large_ke_kd"
+    num_rollouts = "short_ke_kd"
     
     if num_rollouts == "short":
         # config_eric_2025-01-23_01+t=2025-01-23-00-51-39 has about 32 rollouts in training
@@ -123,13 +128,18 @@ if __name__ == "__main__":
         data_path = "/arc/project/st-pai-1/se3/outputs/generate_fem_cloth_data/config_eric_2025-01-21_01+t=2025-01-21-23-52-42/"
         output_path = 'data/FEM_Eric'
     elif num_rollouts == "large_ke_kd":
+        # config config_eric_2025-01-24_01+t=2025-01-24-19-22-12/ has about 32 rollouts in training, but the ke kd is larger
         data_path = "/arc/project/st-pai-1/se3/outputs/generate_fem_cloth_data/config_eric_2025-01-24_01+t=2025-01-24-19-22-12/"
         output_path = 'data/FEM_large_ke_kd'
-    
+    elif num_rollouts == "short_ke_kd":
+        # config_eric_2025-01-26_01+t=2025-01-26-17-35-12/ the config is the same as large_ke_kd. The simulation time is 0.8s, and num of length is still 800
+        data_path = "/arc/project/st-pai-1/se3/outputs/generate_fem_cloth_data/config_eric_2025-01-26_01+t=2025-01-26-17-35-12/"
+        output_path = 'data/FEM_short_ke_kd'
+        
     train_data = os.path.join(data_path, 'dataset_train_full.pt')
     test_data = os.path.join(data_path, 'dataset_test.pt')
    
     # Generate train and valid data
-    convert_to_pickle(file_path=train_data, output_path=output_path, is_train=True)
+    convert_to_pickle(file_path=train_data, output_path=output_path, is_train=True, num_rollouts=num_rollouts)
     # Generate test data
-    convert_to_pickle(file_path=test_data, output_path=output_path, is_train=False)
+    convert_to_pickle(file_path=test_data, output_path=output_path, is_train=False, num_rollouts=num_rollouts)
